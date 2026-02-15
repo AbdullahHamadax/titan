@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background-color: #0a0a14; /* bg-dark */
+  color: #cbd5e1;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Keep the rest of your custom scrollbar CSS from before... */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e1e30;
+  border-radius: 10px;
+}
