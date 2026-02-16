@@ -106,21 +106,21 @@ export default function App() {
   const lexical = Number(data?.stats?.lexical_diversity ?? 0);
 
   return (
-    <div className="flex h-screen w-full bg-bg-dark text-slate-300 p-6 lg:p-10 gap-8 overflow-hidden font-medium">
-      <main className="flex-1 flex flex-col gap-8 min-w-0">
+    <div className="flex w-full h-screen gap-8 p-6 overflow-hidden font-medium bg-bg-dark text-slate-300 lg:p-10">
+      <main className="flex flex-col flex-1 min-w-0 gap-8">
         {/* Header */}
-        <header className="flex justify-between items-end flex-shrink-0">
+        <header className="flex items-end justify-between flex-shrink-0">
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-black mb-1">
               LuminaNLP / Core Engine
             </p>
-            <h1 className="text-4xl font-black text-white tracking-tighter">
+            <h1 className="text-4xl font-black tracking-tighter text-white">
               Project Titan{" "}
-              <span className="text-accent-blue/60 italic">v2.1</span>
+              <span className="italic text-accent-blue/60">v2.1</span>
             </h1>
           </div>
 
-          <div className="bg-card-dark px-4 py-2 rounded-lg border border-border text-xs flex items-center gap-3 font-black uppercase tracking-widest">
+          <div className="flex items-center gap-3 px-4 py-2 text-xs font-black tracking-widest uppercase border rounded-lg bg-card-dark border-border">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span className="text-slate-200">System Live</span>
           </div>
@@ -128,19 +128,19 @@ export default function App() {
 
         {/* Error */}
         {err ? (
-          <div className="bg-rose-500/10 border border-rose-500/20 text-rose-200 rounded-xl px-4 py-3 text-sm">
+          <div className="px-4 py-3 text-sm border bg-rose-500/10 border-rose-500/20 text-rose-200 rounded-xl">
             {err}
           </div>
         ) : null}
 
         {/* Main Grid */}
-        <div className="flex-1 grid grid-cols-12 gap-8 min-h-0">
+        <div className="grid flex-1 min-h-0 grid-cols-12 gap-8">
           {/* Input Section */}
-          <section className="col-span-7 bg-card-dark rounded-2xl border border-border p-8 flex flex-col shadow-2xl relative min-h-0">
+          <section className="relative flex flex-col min-h-0 col-span-7 p-8 border shadow-2xl bg-card-dark rounded-br-2xl rounded-tr-2xl border-border">
             <div className="absolute top-0 left-0 w-[3px] h-full bg-accent-blue shadow-[4px_0_20px_rgba(59,130,246,0.4)]"></div>
 
-            <div className="flex justify-between items-center mb-6 flex-shrink-0">
-              <span className="text-xs font-black uppercase tracking-widest flex items-center gap-3 text-slate-400">
+            <div className="flex items-center justify-between flex-shrink-0 mb-6">
+              <span className="flex items-center gap-3 text-xs font-black tracking-widest uppercase text-slate-400">
                 <FileText size={16} className="text-accent-blue" /> Input
                 Channel
               </span>
@@ -161,7 +161,7 @@ export default function App() {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="flex-1 bg-transparent border-none outline-none resize-none text-slate-100 leading-relaxed text-xl font-normal placeholder:opacity-20 custom-scrollbar overflow-y-auto"
+              className="flex-1 overflow-y-auto text-xl font-normal leading-relaxed bg-transparent border-none outline-none resize-none text-slate-100 placeholder:opacity-20 custom-scrollbar"
               placeholder="Paste text here..."
             />
 
@@ -172,7 +172,7 @@ export default function App() {
               </div>
 
               <span
-                className="cursor-pointer hover:text-white transition"
+                className="transition cursor-pointer hover:text-white"
                 onClick={() => {
                   setText("");
                   setData(null);
@@ -185,18 +185,18 @@ export default function App() {
           </section>
 
           {/* Right Column */}
-          <div className="col-span-5 flex flex-col gap-8 min-h-0">
+          <div className="flex flex-col min-h-0 col-span-5 gap-8">
             {/* Neural Weighting (FIXED) */}
-            <div className="bg-card-dark rounded-2xl border border-border p-8 flex-1 min-h-0 flex flex-col">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">
+            <div className="flex flex-col flex-1 min-h-0 p-8 border bg-card-dark rounded-2xl border-border">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xs font-black tracking-widest uppercase text-slate-400">
                   Neural Weighting
                 </h3>
-                <Activity size={16} className="text-accent-blue opacity-50" />
+                <Activity size={16} className="opacity-50 text-accent-blue" />
               </div>
 
               {/* definite height so percentage bars always render */}
-              <div className="h-44 flex items-end gap-4">
+              <div className="flex items-end gap-4 h-44">
                 {freq.length === 0 ? (
                   <div className="text-xs text-slate-500">
                     No frequency data yet.
@@ -207,9 +207,9 @@ export default function App() {
                     return (
                       <div
                         key={i}
-                        className="flex-1 h-full flex flex-col items-center justify-end gap-3 group"
+                        className="flex flex-col items-center justify-end flex-1 h-full gap-3 group"
                       >
-                        <div className="w-full h-full flex items-end">
+                        <div className="flex items-end w-full h-full">
                           <div
                             className="w-full bg-gradient-to-t from-blue-600/10 to-accent-blue/60 rounded-t-lg shadow-[0_0_20px_rgba(59,130,246,0.18)] transition-all duration-700 ease-out group-hover:brightness-125"
                             style={{ height: `${pct}%` }}
@@ -228,9 +228,9 @@ export default function App() {
             </div>
 
             {/* Token Stream */}
-            <div className="bg-card-dark rounded-2xl border border-border p-8 flex-1 min-h-0 flex flex-col overflow-hidden">
-              <div className="flex justify-between items-center mb-6 flex-shrink-0">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">
+            <div className="flex flex-col flex-1 min-h-0 p-8 overflow-hidden border bg-card-dark rounded-2xl border-border">
+              <div className="flex items-center justify-between flex-shrink-0 mb-6">
+                <h3 className="text-xs font-black tracking-widest uppercase text-slate-400">
                   Token Stream
                 </h3>
                 <div className="flex gap-4 text-[9px] font-black tracking-tighter">
@@ -245,8 +245,8 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                <div className="flex flex-wrap gap-2 content-start pb-4">
+              <div className="flex-1 pr-2 overflow-y-auto custom-scrollbar">
+                <div className="flex flex-wrap content-start gap-2 pb-4">
                   {tokens.length === 0 ? (
                     <span className="text-xs text-slate-500">
                       No tokens yet.
@@ -272,7 +272,7 @@ export default function App() {
         </div>
 
         {/* Stats Footer */}
-        <div className="grid grid-cols-3 gap-8 pb-4 flex-shrink-0">
+        <div className="grid flex-shrink-0 grid-cols-3 gap-8 pb-4">
           <StatCard
             label="Processing Vel."
             value={data?.stats?.processing_time ?? "0ms"}
@@ -304,7 +304,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="relative w-14 h-14 flex flex-shrink-0 items-center justify-center">
+            <div className="relative flex items-center justify-center flex-shrink-0 w-14 h-14">
               <div className={`${sentiment.color} transition-all duration-500`}>
                 {sentiment.icon}
               </div>
@@ -326,17 +326,17 @@ function StatCard({ label, value, icon, sub, bar, barValue = 0 }) {
   const widthPct = Math.max(0, Math.min(100, barValue * 100));
 
   return (
-    <div className="bg-card-dark rounded-2xl border border-border p-6 flex flex-col justify-between shadow-xl">
-      <div className="flex justify-between items-start">
+    <div className="flex flex-col justify-between p-6 border shadow-xl bg-card-dark rounded-2xl border-border">
+      <div className="flex items-start justify-between">
         <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em]">
           {label}
         </p>
-        <span className="text-slate-600 opacity-50">{icon}</span>
+        <span className="opacity-50 text-slate-600">{icon}</span>
       </div>
 
       <div className="mt-3">
         <div className="flex items-baseline gap-3">
-          <h2 className="text-3xl font-black text-white tracking-tighter">
+          <h2 className="text-3xl font-black tracking-tighter text-white">
             {value}
           </h2>
 
@@ -350,7 +350,7 @@ function StatCard({ label, value, icon, sub, bar, barValue = 0 }) {
         {bar && (
           <div className="w-full bg-white/5 h-1.5 mt-3 rounded-full overflow-hidden">
             <div
-              className="bg-accent-blue h-full rounded-full transition-all duration-700"
+              className="h-full transition-all duration-700 rounded-full bg-accent-blue"
               style={{ width: `${widthPct}%` }}
             />
           </div>

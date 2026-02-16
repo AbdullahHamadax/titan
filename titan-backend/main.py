@@ -64,7 +64,7 @@ async def analyze_text(req: TextRequest):
 
     content_words = [t.lower() for t in tokens if t.lower() not in STOP_WORDS]
 
-    counts = collections.Counter(content_words).most_common(4)
+    counts = collections.Counter(content_words).most_common()
     freq_data = [{"word": w.capitalize(), "count": c} for w, c in counts]
 
     lexical_diversity = (len(set(content_words)) / len(content_words)) if content_words else 0.0
