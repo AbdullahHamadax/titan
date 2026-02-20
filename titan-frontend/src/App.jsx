@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
 import {
-  FileText,
   Activity,
-  Smile,
+  FileText,
   Frown,
   Meh,
   RefreshCw,
+  Smile,
   Zap,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function App() {
   const [text, setText] = useState(
@@ -28,7 +28,7 @@ export default function App() {
     setLoading(true);
     setErr("");
     try {
-      const res = await fetch("http://localhost:8000/analyze", {
+      const res = await fetch("https://https://titan-u8wr.vercel.app/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: payload }),
