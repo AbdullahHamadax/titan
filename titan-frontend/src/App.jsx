@@ -28,7 +28,7 @@ export default function App() {
     setLoading(true);
     setErr("");
     try {
-      const res = await fetch("https://titan-u8wr.vercel.app/api/analyze", {
+      const res = await fetch("https://titan-u8wr.vercel.app/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: payload }),
