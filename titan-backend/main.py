@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -11,31 +12,35 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 
 app = FastAPI()
 
+# Note: allow_origins= is great for development. 
+# Once you know your Vercel Frontend URL, replace "*" with your frontend URL for security!
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # dev only — lock down in prod
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=,  
+    allow_methods=,
+    allow_headers=,
 )
 
 class TextRequest(BaseModel):
     text: str
 
-WORD_RE = re.compile(r"[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?")
+WORD_RE = re.compile(r"+(?:'+)?")
 
 STOP_WORDS = set()
 SIA = None
 
 def _ensure_nltk():
-    needed = [
-        ("corpora/stopwords", "stopwords"),
-        ("sentiment/vader_lexicon.zip", "vader_lexicon"),
-    ]
+    # VERCEL FIX: Route all NLTK downloads to the temporary directory
+    download_dir = "/tmp/nltk_data"
+    os.makedirs(download_dir, exist_ok=True)
+    nltk.data.path.append(download_dir)
+    
+    needed =
     for path, pkg in needed:
         try:
             nltk.data.find(path)
         except LookupError:
-            nltk.download(pkg, quiet=True)
+            nltk.download(pkg, download_dir=download_dir, quiet=True)
 
 @app.on_event("startup")
 def startup():
@@ -57,20 +62,17 @@ async def analyze_text(req: TextRequest):
 
     tokens = tokenize(text)
 
-    token_stream = [
-        {"text": t, "is_stop": (t.lower() in STOP_WORDS)}
-        for t in tokens
-    ]
+    token_stream =
 
-    content_words = [t.lower() for t in tokens if t.lower() not in STOP_WORDS]
+    content_words =
 
     counts = collections.Counter(content_words).most_common()
-    freq_data = [{"word": w.capitalize(), "count": c} for w, c in counts]
+    freq_data =
 
     lexical_diversity = (len(set(content_words)) / len(content_words)) if content_words else 0.0
 
-    scores = SIA.polarity_scores(text)  # neg/neu/pos/compound
-    compound = scores["compound"]
+    scores = SIA.polarity_scores(text) 
+    compound = scores
 
     if compound >= 0.05:
         sentiment_label = "POSITIVE"
@@ -79,7 +81,7 @@ async def analyze_text(req: TextRequest):
     else:
         sentiment_label = "NEUTRAL"
 
-    confidence = int(round(max(scores["pos"], scores["neu"], scores["neg"]) * 100))
+    confidence = int(round(max(scores, scores, scores) * 100))
 
     ms = int((time.perf_counter() - start) * 1000)
 
@@ -95,7 +97,3 @@ async def analyze_text(req: TextRequest):
             "char_count": len(text),
         }
     }
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
