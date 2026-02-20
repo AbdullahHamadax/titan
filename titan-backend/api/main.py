@@ -14,7 +14,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 
 app = FastAPI()
 
-# Allow all origins (adjust later if needed)
+# Allow all origins (since frontend is separate project)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,15 +29,13 @@ class TextRequest(BaseModel):
 
 WORD_RE = re.compile(r"\b\w+(?:'\w+)?\b")
 
-# Lazy-loaded globals
 STOP_WORDS = None
 SIA = None
 
 
 def initialize_nltk():
     """
-    Lazy loader for NLTK.
-    Downloads to Vercel's writable /tmp directory only if needed.
+    Lazy loads NLTK into Vercel's writable /tmp directory.
     """
     global STOP_WORDS, SIA
 
@@ -48,12 +46,12 @@ def initialize_nltk():
     os.makedirs(download_dir, exist_ok=True)
     nltk.data.path.append(download_dir)
 
-    needed = [
+    required = [
         ("corpora/stopwords", "stopwords"),
         ("sentiment/vader_lexicon", "vader_lexicon"),
     ]
 
-    for path, pkg in needed:
+    for path, pkg in required:
         try:
             nltk.data.find(path)
         except LookupError:
@@ -74,13 +72,19 @@ async def analyze_text(req: TextRequest):
     initialize_nltk()
 
     text = (req.text or "").strip()
-
     if not text:
         return {"error": "Empty text"}
 
     tokens = tokenize(text)
 
-    token_stream = tokens
+    # ✅ Proper token stream format for frontend
+    token_stream = [
+        {
+            "text": token,
+            "is_stop": token in STOP_WORDS
+        }
+        for token in tokens
+    ]
 
     content_words = [t for t in tokens if t not in STOP_WORDS]
 
