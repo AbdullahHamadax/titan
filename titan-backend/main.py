@@ -12,8 +12,6 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 
 app = FastAPI()
 
-# Note: allow_origins= is great for development. 
-# Once you know your Vercel Frontend URL, replace "*" with your frontend URL for security!
 app.add_middleware(
     CORSMiddleware,
     allow_origins=,  
@@ -26,26 +24,33 @@ class TextRequest(BaseModel):
 
 WORD_RE = re.compile(r"+(?:'+)?")
 
-STOP_WORDS = set()
+# Global variables for lazy loading
+STOP_WORDS = None
 SIA = None
 
-def _ensure_nltk():
+def initialize_nltk():
+    """
+    Lazy loader for NLTK. 
+    Downloads to Vercel's writable /tmp directory only if needed.
+    """
+    global STOP_WORDS, SIA
+    
+    if STOP_WORDS is not None and SIA is not None:
+        return
+
     # VERCEL FIX: Route all NLTK downloads to the temporary directory
     download_dir = "/tmp/nltk_data"
     os.makedirs(download_dir, exist_ok=True)
     nltk.data.path.append(download_dir)
     
     needed =
+    
     for path, pkg in needed:
         try:
             nltk.data.find(path)
         except LookupError:
             nltk.download(pkg, download_dir=download_dir, quiet=True)
-
-@app.on_event("startup")
-def startup():
-    global STOP_WORDS, SIA
-    _ensure_nltk()
+            
     STOP_WORDS = set(stopwords.words("english"))
     SIA = SentimentIntensityAnalyzer()
 
@@ -55,6 +60,10 @@ def tokenize(text: str):
 @app.post("/analyze")
 async def analyze_text(req: TextRequest):
     start = time.perf_counter()
+    
+    # Ensure NLTK models are downloaded to /tmp before processing
+    initialize_nltk()
+    
     text = (req.text or "").strip()
 
     if not text:
